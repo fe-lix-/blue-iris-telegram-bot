@@ -13,16 +13,7 @@ readConfFile = () => {
   try {
     return JSON.parse(oldfs.readFileSync(`${__dirname}/conf.json`, 'utf8'))
   } catch {
-    const defaultJson = {
-      BOT_TOKEN: '',
-      BLUE_IRIS_URL: '',
-      BLUE_IRIS_USERNAME: '',
-      BLUE_IRIS_PASSWORD: '',
-      PORT: '3000',
-      ALLOWED_USER: []
-    }
-
-    return defaultJson
+    return false
   }
 }
 
