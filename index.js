@@ -22,19 +22,35 @@ readConfFile = () => {
       ALLOWED_USER: []
     }
 
-    fs.writeFile(`${__dirname}/conf.json`, JSON.stringify(defaultJson))
-
     return defaultJson
   }
 }
 
-const { BOT_TOKEN, BLUE_IRIS_URL, BLUE_IRIS_USERNAME, BLUE_IRIS_PASSWORD, PORT } = readConfFile()
+readEnvVariable = () => {
+  const env = process.env
+  return {
+    BOT_TOKEN: env.BOT_TOKEN || '',
+    BLUE_IRIS_URL: env.BLUE_IRIS_URL || '',
+    BLUE_IRIS_USERNAME: env.BLUE_IRIS_USERNAME || '',
+    BLUE_IRIS_PASSWORD: env.BLUE_IRIS_PASSWORD || '',
+    PORT: env.PORT || '3000',
+    ALLOWED_USER: env.ALLOWED_USER ? env.ALLOWED_USER.split(',') : []
+  }
+}
+
+let configuration = readConfFile()
+
+if (!configuration) {
+  configuration = readEnvVariable()
+}
+
+const { BOT_TOKEN, BLUE_IRIS_URL, BLUE_IRIS_USERNAME, BLUE_IRIS_PASSWORD, PORT } = configuration
 
 if (BOT_TOKEN === '' || BLUE_IRIS_URL === '' || BLUE_IRIS_USERNAME === '' || BLUE_IRIS_PASSWORD === '') {
-  if (BOT_TOKEN === '') console.warn('BOT_TOKEN has to be specified in conf.json.')
-  if (BLUE_IRIS_URL === '') console.warn('BLUE_IRIS_URL has to be specified in conf.json.')
-  if (BLUE_IRIS_USERNAME === '') console.warn('BLUE_IRIS_USERNAME has to be specified in conf.json.')
-  if (BLUE_IRIS_PASSWORD === '') console.warn('BLUE_IRIS_PASSWORD has to be specified in conf.json.')
+  if (BOT_TOKEN === '') console.warn('BOT_TOKEN has to be specified in configuration.')
+  if (BLUE_IRIS_URL === '') console.warn('BLUE_IRIS_URL has to be specified in configuration.')
+  if (BLUE_IRIS_USERNAME === '') console.warn('BLUE_IRIS_USERNAME has to be specified in configuration.')
+  if (BLUE_IRIS_PASSWORD === '') console.warn('BLUE_IRIS_PASSWORD has to be specified in configuration.')
   exit()
 }
 
